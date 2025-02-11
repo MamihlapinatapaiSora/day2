@@ -1,16 +1,16 @@
+from pathlib import Path
 import json
 from cryptography.fernet import Fernet
 
 # 生成密钥并保存到文件
-def generate_and_save_key():
+def generate_and_save_key(key_path: Path):
     key = Fernet.generate_key()
-    with open("secret.key", "wb") as key_file:
-        key_file.write(key)
+    key_path.write_bytes(key)
     return key
 
 # 加载密钥
-def load_key():
-    return open("secret.key", "rb").read()
+def load_key(key_path: Path):
+    return key_path.read_bytes()
 
 # 加密消息
 def encrypt_message(cipher_suite, message: str) -> bytes:
@@ -23,9 +23,9 @@ def decrypt_message(cipher_suite, encrypted_message: bytes) -> str:
     return decrypted_message
 
 # 保存加密数据到 JSON 文件
-def save_encrypted_data_to_json(data_dict, file_path):
+def save_encrypted_data_to_json(data_dict, json_path: Path):
     # 加载密钥
-    key = load_key()
+    key = load_key(json_path.with_name("secret.key"))
     cipher_suite = Fernet(key)
 
     # 加密每个值
@@ -35,17 +35,17 @@ def save_encrypted_data_to_json(data_dict, file_path):
     encoded_data = {k: v.decode('utf-8') for k, v in encrypted_data.items()}
 
     # 写入 JSON 文件
-    with open("test_json", 'w', encoding='utf-8') as f:
+    with json_path.open('w', encoding='utf-8') as f:
         json.dump(encoded_data, f, ensure_ascii=False, indent=4)
 
 # 从 JSON 文件加载加密数据
-def load_encrypted_data_from_json(file_path):
+def load_encrypted_data_from_json(json_path: Path):
     # 加载密钥
-    key = load_key()
+    key = load_key(json_path.with_name("secret.key"))
     cipher_suite = Fernet(key)
 
     # 读取 JSON 文件
-    with open("test_json", 'r', encoding='utf-8') as f:
+    with json_path.open('r', encoding='utf-8') as f:
         encoded_data = json.load(f)
 
     # 解码 base64 字符串并解密每个值
@@ -63,10 +63,17 @@ data_dict = {
     "password": "752193577"
 }
 
-generate_and_save_key()#生成密钥
+# 创建路径对象
+base_dir = Path.cwd()
+key_path = base_dir / "secret.key"
+json_path = base_dir / "secrets.json"
+
+# 生成并保存密钥
+generate_and_save_key(key_path)
+
 # 保存加密数据到 JSON 文件
-save_encrypted_data_to_json(data_dict, "secrets.json")
+save_encrypted_data_to_json(data_dict, json_path)
 
 # 从 JSON 文件加载加密数据
-loaded_data = load_encrypted_data_from_json("secrets.json")
+loaded_data = load_encrypted_data_from_json(json_path)
 print("加载的数据:", loaded_data)
