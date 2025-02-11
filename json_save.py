@@ -25,7 +25,7 @@ def decrypt_message(cipher_suite, encrypted_message: bytes) -> str:
 # 保存加密数据到 JSON 文件
 def save_encrypted_data_to_json(data_dict, json_path: Path):
     # 加载密钥
-    key = load_key(json_path.with_name("secret.key"))
+    key = load_key(json_path.with_name("user.key"))
     cipher_suite = Fernet(key)
 
     # 加密每个值
@@ -41,7 +41,7 @@ def save_encrypted_data_to_json(data_dict, json_path: Path):
 # 从 JSON 文件加载加密数据
 def load_encrypted_data_from_json(json_path: Path):
     # 加载密钥
-    key = load_key(json_path.with_name("secret.key"))
+    key = load_key(json_path.with_name("user.key"))
     cipher_suite = Fernet(key)
 
     # 读取 JSON 文件
@@ -65,8 +65,8 @@ data_dict = {
 
 # 创建路径对象
 base_dir = Path.cwd()
-key_path = base_dir / "secret.key"
-json_path = base_dir / "secrets.json"
+key_path = base_dir / "user.key"
+json_path = base_dir / "user.json"
 
 # 生成并保存密钥
 generate_and_save_key(key_path)
