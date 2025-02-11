@@ -33,6 +33,7 @@ def decrypt_message(encrypted_message: bytes) -> str:
     decrypted_message = cipher_suite.decrypt(encrypted_message).decode()
     return decrypted_message
 
+
 # 示例：解密消息
 decrypted_message = decrypt_message(encrypted_message)
 print("解密后的消息:", decrypted_message)
