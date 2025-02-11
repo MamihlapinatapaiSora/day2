@@ -1,5 +1,15 @@
 from cryptography.fernet import Fernet
 
+# 生成密钥
+key = Fernet.generate_key()
+
+# 打印密钥（仅用于演示，实际应用中不要直接打印密钥）
+print("Generated Key:", key.decode())
+
+# 将密钥保存到文件
+with open("secret.key", "wb") as key_file:
+    key_file.write(key)
+
 def load_key():
     """加载密钥"""
     return open("secret.key", "rb").read()
