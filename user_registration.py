@@ -6,7 +6,7 @@ import json
 ph = argon2.PasswordHasher()
 
 # 存储用户信息的文件路径
-users_db_path = Path("users.db")
+users_db_path = Path("users.json")
 
 def register_user(username: str, password: str):
     """注册新用户"""
@@ -31,4 +31,4 @@ def register_user(username: str, password: str):
         json.dump(users_db, f, ensure_ascii=False, indent=4)
 
 # 示例：注册用户
-register_user("星乃凛", "752193577")
+register_user("洛天衿", "752193577")
